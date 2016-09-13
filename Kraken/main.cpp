@@ -3,9 +3,9 @@
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
-    Kraken w;
-    w.show();
-
-    return a.exec();
+    QApplication app(argc, argv);
+    Kraken window;
+    window.show();
+    QObject::connect(&app, SIGNAL(aboutToQuit()), &window, SLOT(Closing()));
+    return app.exec();
 }
