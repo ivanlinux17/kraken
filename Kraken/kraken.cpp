@@ -22,13 +22,17 @@ void Kraken::Initialize()
     // Read Ini
     settings = new QSettings("../kraken.ini", QSettings::IniFormat);
     // Initial values
-    ui->ageSpin->setRange(settings->value("minAge",0).toInt(),settings->value("maxAge",130).toInt());
-    ui->ageSlider->setRange(settings->value("minAge",0).toInt(),settings->value("maxAge",130).toInt());
+    ui->ageSpin->setRange(settings->value("minAge",0).toInt(),
+                          settings->value("maxAge",130).toInt());
+    ui->ageSlider->setRange(settings->value("minAge",0).toInt(),
+                            settings->value("maxAge",130).toInt());
     QPixmap image("../pics/miniKraken.jpg");
     ui->pictureLabel->setPixmap(image);
 
-    // Connecting
-    QObject::connect (ui->ageSpin, SIGNAL(valueChanged(int)), ui->ageSlider, SLOT(setValue(int)));
+    // Connecting new way
+    QObject::connect (ui->ageSpin, static_cast<void (QSpinBox::*)(int)> (&QSpinBox::valueChanged),
+                      ui->ageSlider, &QSlider::setValue);
+    // Connecting old way
     QObject::connect (ui->ageSlider, SIGNAL(valueChanged(int)), ui->ageSpin, SLOT(setValue(int)));
 
 
