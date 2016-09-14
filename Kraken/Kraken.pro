@@ -18,3 +18,5 @@ SOURCES += main.cpp\
 HEADERS  += kraken.h
 
 FORMS    += kraken.ui
+
+win32: RC_ICONS = ../pics/octopus.ico
