@@ -32,3 +32,6 @@
 *.user
 build-Kraken-*
 kraken.ini
+
+# Documentation
+docs

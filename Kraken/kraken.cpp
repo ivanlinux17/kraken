@@ -17,6 +17,9 @@ Kraken::~Kraken()
     delete ui;
 }
 
+/**
+* @brief Initialize all the GUI components.
+*/
 void Kraken::Initialize()
 {
     // Read Ini
@@ -39,6 +42,10 @@ void Kraken::Initialize()
 
     ui->ageSpin->setValue(settings->value("lastAge",35).toInt());
 }
+
+/**
+* @brief Saves the status of some widgets for the next time.
+*/
 void Kraken::Closing()
 {
     settings->setValue("lastAge",ui->ageSlider->value());

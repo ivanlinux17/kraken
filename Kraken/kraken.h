@@ -1,3 +1,13 @@
+/*! \mainpage Kraken
+ * @author Ivan Lopez <ivanlinux@gmail.com>
+ *
+ * \section sec Introduction
+ *
+ * When the Kraken is released is already too late for everybody.
+ * <img src="../../pics/miniKraken.jpg" align="RIGHT"></img>
+ * <br> <br> <br> <br> <br>
+ */
+
 #ifndef KRAKEN_H
 #define KRAKEN_H
 
@@ -9,6 +19,11 @@ namespace Ui {
 class Kraken;
 }
 
+/**
+* @brief Main class that includes all the GUI elements.
+*
+* This class is responsible for dealing with the final user.
+*/
 class Kraken : public QMainWindow
 {
     Q_OBJECT
