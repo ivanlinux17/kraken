@@ -1,6 +1,10 @@
 #include "kraken.h"
 #include "ui_kraken.h"
 
+#include <QDesktopServices>
+#include <QFileInfo>
+#include <QtCore>
+
 
 Kraken::Kraken(QWidget *parent) :
     QMainWindow(parent),
@@ -56,4 +60,10 @@ void Kraken::on_actionExit_triggered()
 {
     Closing();
     QApplication::quit();
+}
+
+void Kraken::on_actionManual_triggered()
+{
+    //QDesktopServices::openUrl(QUrl("file:///C:/Documents and Settings/All Users/Desktop", QUrl::TolerantMode));
+    QDesktopServices::openUrl(QUrl::fromLocalFile(QFileInfo("../docs/html/index.html").absoluteFilePath()));
 }
