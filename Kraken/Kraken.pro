@@ -15,7 +15,8 @@ TEMPLATE = app
 SOURCES += main.cpp\
         kraken.cpp
 
-HEADERS  += kraken.h
+HEADERS  += kraken.h \
+    error.h
 
 FORMS    += kraken.ui
 

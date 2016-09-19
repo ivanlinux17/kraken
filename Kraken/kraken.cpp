@@ -1,10 +1,7 @@
 #include "kraken.h"
 #include "ui_kraken.h"
 
-#include <QDesktopServices>
-#include <QFileInfo>
-#include <QtCore>
-#include <QMessageBox>
+
 
 
 Kraken::Kraken(QWidget *parent) :
@@ -62,6 +59,18 @@ void Kraken::Closing()
     settings->sync();
 }
 
+void Kraken::HighLightWord(QTextCursor cursor)
+{
+    QTextCharFormat plainFormat(cursor.charFormat());
+    QTextCharFormat colorFormat = plainFormat;
+    colorFormat.setForeground(Qt::red);
+    std::cout << cursor.columnNumber() << " ";
+    cursor.movePosition(QTextCursor::WordRight, QTextCursor::KeepAnchor);
+    std::cout << cursor.columnNumber() << std::endl;
+    cursor.mergeCharFormat(colorFormat);
+    ui->logEdit->setTextCursor(cursor);
+}
+
 void Kraken::on_actionExit_triggered()
 {
     Closing();
@@ -74,10 +83,52 @@ void Kraken::on_actionManual_triggered()
     QDesktopServices::openUrl(QUrl::fromLocalFile(QFileInfo("../docs/html/index.html").absoluteFilePath()));
 }
 
-void Kraken::on_pushButton_clicked()
+void Kraken::on_searchButton_clicked()
 {
-    Qt::CaseSensitivity cs = Qt::CaseInsensitive;
-    QString searchKey = ui->searchKeyEdit->text();
+    key = ui->searchKeyEdit->text();
+
+    /*QList<QTextEdit::ExtraSelection> extraSelections;
+    QTextEdit::ExtraSelection extra;
+    ui->logEdit->moveCursor(QTextCursor::Start);
+
+    //QTextCharFormat plainFormat(highlightCursor.charFormat());
+    QTextCharFormat colorFormat;
+    colorFormat.setForeground(Qt::red);
+    while (ui->logEdit->find(key))
+    {
+        extra.cursor = ui->logEdit->textCursor();
+        extra.cursor.mergeCharFormat(colorFormat);
+        extraSelections.append(extra);
+    }
+
+    ui->logEdit->setExtraSelections(extraSelections);
+    */
+    QRegExp regex = QRegExp(ui->searchKeyEdit->text());
+    posInSearch = 0;
+   /* cursorSearch = ui->logEdit->
+    if (regex.indexIn(self.toPlainText(), posInSearch) > 0)
+    {
+
+    }*/
+
+
+    ui->logEdit->moveCursor(QTextCursor::Start);
+    logText = ui->logEdit->document();
+
+    cursor = QTextCursor (logText);
+
+    if (!logText->find(key,cursor).isNull())
+    {
+        std::cout << "Find word!" << std::endl;
+        ui->nextButton->setEnabled(true);
+        HighLightWord(cursor);
+
+    }
+    /*while (ui->logEdit->find(key))
+    {
+        cursorAtWord.movePosition(QTextCursor::WordRight, QTextCursor::KeepAnchor);
+        cursorAtWord.mergeCharFormat(colorFormat);
+    }*/
 }
 
 void Kraken::on_timer()
@@ -146,4 +197,27 @@ void Kraken::on_errorsCheck_stateChanged(int)
 void Kraken::on_pushButton_2_clicked()
 {
     timerLogging->start();
+}
+
+void Kraken::on_nextButton_clicked()
+{
+    if (!logText->find(key,cursor).isNull())
+    {
+        ui->nextButton->setEnabled(false);
+
+    }
+    else
+        ui->prevButton->setEnabled(true);
+
+}
+
+
+void Kraken::on_prevButton_clicked()
+{
+    if (!logText->find(key,cursor).isNull(),QTextDocument::FindBackward)
+    {
+        ui->prevButton->setEnabled(false);
+    }
+    else
+        ui->nextButton->setEnabled(true);
 }

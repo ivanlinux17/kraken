@@ -1,9 +1,39 @@
 /*! \mainpage Kraken
  * @author Ivan Lopez <ivanlinux@gmail.com>
  *
- * \section sec Introduction
+ * \section Introduction
+ * This tool has been created for learning how to develop
+ * a powerful GUI. And, please, always remember:
+ * > When the Kraken is released is already too late for everybody.
  *
- * When the Kraken is released is already too late for everybody.
+ * \section QT
+ * There are different libraries available:
+ * * GTK
+ * * MSVS (WPF)
+ * * TK/Int
+ *
+ * However QT is cross-platform, very mature library with a huge collection
+ * of classes that ease the creation of GUI tools.
+ *
+ *
+ * - Timer
+ * --------
+ * Using this class, a function could be called every X milliseconds.
+ * ~~~~~~~~~~~~~~~{.c}
+ * QTimmer timerLogging = QTimmer (this);
+ * timerLogging.start(100);
+ * connect(timerLogging, SIGNAL(timeout()), this, SLOT(on_timer()));
+ * ~~~~~~~~~~~~~~~
+ *
+ * - QPlainText
+ * -------------
+ * @code{.c}
+ * QTimmer timerLogging = QTimmer (this);
+ * timerLogging.start(100);
+ * connect(timerLogging, SIGNAL(timeout()), this, SLOT(on_timer()));
+ * @endcode
+ *
+ *
  * <img src="../../pics/miniKraken.jpg" align="RIGHT"></img>
  * <br> <br> <br> <br> <br>
  */
@@ -15,6 +45,13 @@
 #include <QSettings>
 #include <iostream>
 #include <vector>
+
+#include <QDesktopServices>
+#include <QFileInfo>
+#include <QtCore>
+#include <QMessageBox>
+#include <QTextCursor>
+#include <QRegExp>
 
 struct logType
 {
@@ -45,7 +82,7 @@ private slots:
 
     void on_actionManual_triggered();
 
-    void on_pushButton_clicked();
+    void on_searchButton_clicked();
 
     void on_timer();
 
@@ -59,6 +96,10 @@ private slots:
 
     void on_pushButton_2_clicked();
 
+    void on_nextButton_clicked();
+
+    void on_prevButton_clicked();
+
 public slots:
     void Closing();
 
@@ -67,8 +108,14 @@ private:
     std::vector<logType> log;
     QString loggingtext;
     QStringList lines;
+    QString key;
+    int posInSearch;
+    QTextDocument* logText;
+    QTextCursor cursor;
+    QTextCursor cursorSearch;
     void Initialize();
     void filterLog ();
+    void HighLightWord(QTextCursor cursor);
 
     QSettings *settings;
 
