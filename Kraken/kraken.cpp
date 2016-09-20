@@ -47,7 +47,8 @@ void Kraken::Initialize()
 
     ui->ageSpin->setValue(settings->value("lastAge",35).toInt());
     timerLogging->start(100);
-    ui->logEdit->setMaximumBlockCount(80);
+    //ui->logEdit->setMaximumBlockCount(80);
+    ui->logEdit->document()->setMaximumBlockCount(80);
 }
 
 /**
@@ -63,8 +64,8 @@ void Kraken::HighLightWord(QTextCursor cursor)
 {
     QTextCharFormat plainFormat(cursor.charFormat());
     QTextCharFormat colorFormat = plainFormat;
-    colorFormat.setForeground(Qt::red);
-    std::cout << cursor.columnNumber() << " ";
+    colorFormat.setBackground(Qt::blue);
+    std::cout << cursor.blockNumber()<< "   " << cursor.columnNumber() << " ";
     cursor.movePosition(QTextCursor::WordRight, QTextCursor::KeepAnchor);
     std::cout << cursor.columnNumber() << std::endl;
     cursor.mergeCharFormat(colorFormat);
@@ -86,6 +87,8 @@ void Kraken::on_actionManual_triggered()
 void Kraken::on_searchButton_clicked()
 {
     key = ui->searchKeyEdit->text();
+    ui->prevButton->setEnabled(true);
+    ui->nextButton->setEnabled(true);
 
     /*QList<QTextEdit::ExtraSelection> extraSelections;
     QTextEdit::ExtraSelection extra;
@@ -116,14 +119,7 @@ void Kraken::on_searchButton_clicked()
     logText = ui->logEdit->document();
 
     cursor = QTextCursor (logText);
-
-    if (!logText->find(key,cursor).isNull())
-    {
-        std::cout << "Find word!" << std::endl;
-        ui->nextButton->setEnabled(true);
-        HighLightWord(cursor);
-
-    }
+    this->on_nextButton_clicked();
     /*while (ui->logEdit->find(key))
     {
         cursorAtWord.movePosition(QTextCursor::WordRight, QTextCursor::KeepAnchor);
@@ -139,21 +135,23 @@ void Kraken::on_timer()
     {
         text = QString("<font color=\"red\">18/12 Error Oh my god! An error ocurred</font>");
         if (ui->errorsCheck->isChecked())
-            ui->logEdit->appendHtml(text);
+            //ui->logEdit->appendHtml(text);
+            ui->logEdit->append(text);
     }
     else
     {
         text = QString ("18/12 Trace The value returned from the function was %1")
                 .arg(value);
         if (ui->traceCheck->isChecked())
-            ui->logEdit->appendHtml(text);
+            //ui->logEdit->appendHtml(text);
+            ui->logEdit->append(text);
     }
     this->lines.append(text);
     if (lines.count()>80)
         lines.pop_front();
 
     QString mess = QString ("lines size %1 logedit size %2.")
-                           .arg(lines.count()).arg(ui->logEdit->blockCount());
+                           .arg(lines.count()).arg(ui->logEdit->document()->blockCount());
     std::cout<<mess.toStdString()<<std::endl;
 }
 
@@ -169,11 +167,13 @@ void Kraken::filterLog()
     {
         QString line = lines[i];
         if (line.contains("Error") && ui->errorsCheck->isChecked())
-            ui->logEdit->appendHtml(line);
+            //ui->logEdit->appendHtml(line);
+            ui->logEdit->append(line);
         else
         {
             if (line.contains("Trace") && ui->traceCheck->isChecked())
-                ui->logEdit->appendHtml(line);
+                //ui->logEdit->appendHtml(line);
+                ui->logEdit->append(line);
         }
     }
 }
@@ -201,23 +201,27 @@ void Kraken::on_pushButton_2_clicked()
 
 void Kraken::on_nextButton_clicked()
 {
-    if (!logText->find(key,cursor).isNull())
+    cursor = logText->find(key,cursor);
+    if (!cursor.isNull())
     {
-        ui->nextButton->setEnabled(false);
+        //ui->nextButton->setEnabled(true);
+        this->HighLightWord(cursor);
 
     }
     else
-        ui->prevButton->setEnabled(true);
+        ui->nextButton->setEnabled(false);
 
 }
 
 
 void Kraken::on_prevButton_clicked()
 {
-    if (!logText->find(key,cursor).isNull(),QTextDocument::FindBackward)
+    cursor = logText->find(key,cursor,QTextDocument::FindBackward);
+    if (!cursor.isNull())
     {
-        ui->prevButton->setEnabled(false);
+        //ui->prevButton->setEnabled(false);
+        this->HighLightWord(cursor);
     }
     else
-        ui->nextButton->setEnabled(true);
+        ui->prevButton->setEnabled(true);
 }

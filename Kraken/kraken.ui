@@ -130,7 +130,10 @@
         <item>
          <layout class="QVBoxLayout" name="verticalLayout">
           <item>
-           <widget class="QPlainTextEdit" name="logEdit"/>
+           <widget class="QTextEdit" name="logEdit"/>
+          </item>
+          <item>
+           <widget class="QPlainTextEdit" name="logEdit2"/>
           </item>
          </layout>
         </item>
