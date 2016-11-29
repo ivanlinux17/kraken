@@ -38,8 +38,9 @@ void Kraken::Initialize()
 
 
     // Connecting new way
-    QObject::connect (ui->ageSpin, static_cast<void (QSpinBox::*)(int)> (&QSpinBox::valueChanged),
-                      ui->ageSlider, &QSlider::setValue);
+    QObject::connect (ui->ageSpin, static_cast<void (QSpinBox::*)(int)>
+                     (&QSpinBox::valueChanged), ui->ageSlider,
+                     &QSlider::setValue);
     // Connecting old way
     QObject::connect (ui->ageSlider, SIGNAL(valueChanged(int)), ui->ageSpin, SLOT(setValue(int)));
 
